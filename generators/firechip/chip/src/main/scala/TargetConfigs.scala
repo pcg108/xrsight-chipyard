@@ -251,6 +251,8 @@ class FireSimDmiRocketConfig extends Config(
 // Boom config, base off chipyard's LargeBoomV3Config
 //*****************************************************************
 class FireSimLargeBoomConfig extends Config(
+  new chipyard.example.WithGraphics() ++
+  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
   new WithDefaultFireSimBridges ++
   new WithFireSimConfigTweaks ++
   new chipyard.LargeBoomV3Config)
