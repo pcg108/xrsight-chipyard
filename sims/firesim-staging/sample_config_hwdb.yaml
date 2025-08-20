@@ -77,11 +77,11 @@ alveo_u250_firesim_rocket_singlecore_no_nic:
     deploy_quintuplet_override: null
     deploy_makefrag_override: ../../generators/firechip/chip/src/main/makefrag/firesim
     custom_runtime_config: null
-alveo_u250_firesim_rocket_quadcore_no_nic:
-    bitstream_tar: https://raw.githubusercontent.com/firesim/firesim-public-bitstreams/c91b4700e565cae6e33c02ab56ff320db1005430/xilinx_alveo_u250/alveo_u250_firesim_rocket_quadcore_no_nic.tar.gz
-    deploy_quintuplet_override: null
-    deploy_makefrag_override: ../../generators/firechip/chip/src/main/makefrag/firesim
-    custom_runtime_config: null
+# alveo_u250_firesim_rocket_quadcore_no_nic:
+#     bitstream_tar: https://raw.githubusercontent.com/firesim/firesim-public-bitstreams/c91b4700e565cae6e33c02ab56ff320db1005430/xilinx_alveo_u250/alveo_u250_firesim_rocket_quadcore_no_nic.tar.gz
+#     deploy_quintuplet_override: null
+#     deploy_makefrag_override: ../../generators/firechip/chip/src/main/makefrag/firesim
+#     custom_runtime_config: null
 # alveo_u250_firesim_boom_singlecore_no_nic:
 #     bitstream_tar: https://raw.githubusercontent.com/firesim/firesim-public-bitstreams/94f0e9cbeebdf4f018533829e3bff503f382c943/xilinx_alveo_u250/alveo_u250_firesim_boom_singlecore_no_nic.tar.gz
 #     deploy_quintuplet_override: null
@@ -117,7 +117,154 @@ nitefury_firesim_rocket_singlecore_no_nic:
     deploy_quintuplet_override: null
     deploy_makefrag_override: ../../generators/firechip/chip/src/main/makefrag/firesim
     custom_runtime_config: null
+alveo_u250_firesim_gemmini_rocket_singlecore_no_nic:
+    bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-04-01--00-40-58-alveo_u250_firesim_gemmini_rocket_singlecore_no_nic/cl_xilinx_alveo_u250-firesim-FireSim-FireSimLeanGemminiRocketConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+    deploy_quintuplet_override: null
+    custom_runtime_config: null
+
+# alveo_u250_firesim_saturn:
+#     bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-04-17--22-15-41-alveo_u250_firesim_saturn/cl_xilinx_alveo_u250-firesim-FireSim-FireSimGENV256D128ShuttleConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+#     deploy_quintuplet_override: null
+#     custom_runtime_config: null
 alveo_u250_firesim_boom_singlecore_no_nic:
-    bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-03-08--22-28-17-alveo_u250_firesim_boom_singlecore_no_nic/cl_xilinx_alveo_u250-firesim-FireSim-FireSimLargeBoomConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+    bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-03-27--01-03-40-alveo_u250_firesim_boom_singlecore_no_nic/cl_xilinx_alveo_u250-firesim-FireSim-FireSimLargeBoomConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+    deploy_quintuplet_override: null
+    custom_runtime_config: null
+alveo_u250_firesim_saturn_dual_gemmini:
+    bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-05-04--06-05-04-alveo_u250_firesim_saturn_dual_gemmini/cl_xilinx_alveo_u250-firesim-FireSim-FireSimSaturnDualGemmini-BaseXilinxAlveoU250Config/firesim.tar.gz
+    deploy_quintuplet_override: null
+    custom_runtime_config: null
+alveo_u250_firesim_shuttle_gemmini:
+    bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-04-28--04-38-25-alveo_u250_firesim_shuttle_gemmini/cl_xilinx_alveo_u250-firesim-FireSim-FireSimGemminiShuttleConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+    deploy_quintuplet_override: null
+    custom_runtime_config: null
+alveo_u250_firesim_quadcore_shuttle_gemmini_saturn:
+    bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-05-07--21-04-33-alveo_u250_firesim_quadcore_shuttle_gemmini_saturn/cl_xilinx_alveo_u250-firesim-FireSim-FireSimGemminiQuadShuttleConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+    deploy_quintuplet_override: null
+    custom_runtime_config: null
+# alveo_u250_firesim_int8_gemmini_rocket_singlecore_no_nic:
+#     bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-05-09--20-53-10-alveo_u250_firesim_int8_gemmini_rocket_singlecore_no_nic/cl_xilinx_alveo_u250-firesim-FireSim-FireSimGemminiRocketConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+#     deploy_quintuplet_override: null
+#     custom_runtime_config: null
+alveo_u250_firesim_shuttle_saturn_int8_gemmini:
+    bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-05-10--07-53-52-alveo_u250_firesim_shuttle_saturn_int8_gemmini/cl_xilinx_alveo_u250-firesim-FireSim-FireSimSaturnGemmini-BaseXilinxAlveoU250Config/firesim.tar.gz
+    deploy_quintuplet_override: null
+    custom_runtime_config: null
+# alveo_u250_firesim_saturn:
+#     bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-05-10--06-04-41-alveo_u250_firesim_saturn/cl_xilinx_alveo_u250-firesim-FireSim-FireSimGENV256D128ShuttleConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+#     deploy_quintuplet_override: null
+#     custom_runtime_config: null
+# alveo_u250_firesim_saturn:
+#     bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-05-20--08-39-45-alveo_u250_firesim_saturn/cl_xilinx_alveo_u250-firesim-FireSim-FireSimGENV256D128ShuttleConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+#     deploy_quintuplet_override: null
+#     custom_runtime_config: null
+#### with counters
+alveo_u250_firesim_saturn:
+    bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-06-11--06-27-31-alveo_u250_firesim_saturn/cl_xilinx_alveo_u250-firesim-FireSim-FireSimGENV256D128ShuttleConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+    deploy_quintuplet_override: null
+    custom_runtime_config: null
+    
+alveo_u250_firesim_saturn_fp32_gemmini:
+    bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-05-12--03-52-29-alveo_u250_firesim_saturn_fp32_gemmini/cl_xilinx_alveo_u250-firesim-FireSim-FireSimSaturnFPGemmini-BaseXilinxAlveoU250Config/firesim.tar.gz
+    deploy_quintuplet_override: null
+    custom_runtime_config: null
+# alveo_u250_firesim_rocket_quadcore_saturn:
+#     bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-05-10--17-49-31-alveo_u250_firesim_rocket_quadcore_saturn/cl_xilinx_alveo_u250-firesim-FireSim-FireSimSaturnQuadRocketConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+#     deploy_quintuplet_override: null
+#     custom_runtime_config: null
+alveo_u250_firesim_rocket_quadcore_no_nic:
+    bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-05-11--08-27-26-alveo_u250_firesim_rocket_quadcore_no_nic/cl_xilinx_alveo_u250-firesim-FireSim-FireSimQuadRocketConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+    deploy_quintuplet_override: null
+    custom_runtime_config: null
+
+# with assertion synthesis
+# alveo_u250_firesim_rocket_quadcore_saturn:
+#     bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-05-11--18-27-32-alveo_u250_firesim_rocket_quadcore_saturn/cl_xilinx_alveo_u250-firesim-FireSim-FireSimSaturnQuadRocketConfig-WithSynthAsserts_BaseXilinxAlveoU250Config/firesim.tar.gz
+#     deploy_quintuplet_override: null
+#     custom_runtime_config: null
+alveo_u250_firesim_rocket_dualcore_saturn:
+    bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-05-12--22-13-50-alveo_u250_firesim_rocket_dualcore_saturn/cl_xilinx_alveo_u250-firesim-FireSim-FireSimSaturnDualRocketConfig-WithSynthAsserts_BaseXilinxAlveoU250Config/firesim.tar.gz
+    deploy_quintuplet_override: null
+    custom_runtime_config: null
+alveo_u250_firesim_rocket_quadcore_saturn:
+    bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-05-17--00-57-54-alveo_u250_firesim_rocket_quadcore_saturn/cl_xilinx_alveo_u250-firesim-FireSim-FireSimSaturnQuadRocketConfig-WithSynthAsserts_BaseXilinxAlveoU250Config/firesim.tar.gz
+    deploy_quintuplet_override: null
+    custom_runtime_config: null
+
+alveo_u250_firesim_shuttle:
+    bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-05-15--22-50-36-alveo_u250_firesim_shuttle/cl_xilinx_alveo_u250-firesim-FireSim-FireSimShuttleConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+    deploy_quintuplet_override: null
+    custom_runtime_config: null
+
+# alveo_u250_firesim_rocket_singlecore:
+#     bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-05-18--03-42-45-alveo_u250_firesim_rocket_singlecore/cl_xilinx_alveo_u250-firesim-FireSim-FireSimRocketConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+#     deploy_quintuplet_override: null
+#     custom_runtime_config: null
+
+alveo_u250_firesim_rocket_singlecore:
+    bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-05-28--08-12-09-alveo_u250_firesim_rocket_singlecore/cl_xilinx_alveo_u250-firesim-FireSim-FireSimRocketConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+    deploy_quintuplet_override: null
+    custom_runtime_config: null
+
+
+# alveo_u250_firesim_rocket_saturn:
+#     bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-05-19--00-44-34-alveo_u250_firesim_rocket_saturn/cl_xilinx_alveo_u250-firesim-FireSim-FireSimGENV256D128RocketConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+#     deploy_quintuplet_override: null
+#     custom_runtime_config: null
+alveo_u250_firesim_rocket_saturn:
+    bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-06-11--21-07-17-alveo_u250_firesim_rocket_saturn/cl_xilinx_alveo_u250-firesim-FireSim-FireSimGENV256D128RocketConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+    deploy_quintuplet_override: null
+    custom_runtime_config: null
+
+# alveo_u250_firesim_rocket_fp32_gemmini:
+#     bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-05-19--06-05-27-alveo_u250_firesim_rocket_fp32_gemmini/cl_xilinx_alveo_u250-firesim-FireSim-FireSimFPGemminiRocketConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+#     deploy_quintuplet_override: null
+#     custom_runtime_config: null
+#### with 10 counters:
+alveo_u250_firesim_rocket_fp32_gemmini:
+    bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-06-03--21-31-23-alveo_u250_firesim_rocket_fp32_gemmini/cl_xilinx_alveo_u250-firesim-FireSim-FireSimFPGemminiRocketConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+    deploy_quintuplet_override: null
+    custom_runtime_config: null
+#### with gemmini stats and 10 counters
+# alveo_u250_firesim_rocket_fp32_gemmini:
+#     bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-06-07--23-25-15-alveo_u250_firesim_rocket_fp32_gemmini/cl_xilinx_alveo_u250-firesim-FireSim-FireSimFPGemminiRocketConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+#     deploy_quintuplet_override: null
+#     custom_runtime_config: null
+
+alveo_u250_firesim_rocket_dual_gemmini:
+    bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-05-23--05-58-44-alveo_u250_firesim_rocket_dual_gemmini/cl_xilinx_alveo_u250-firesim-FireSim-FireSimRocketDualGemminiConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+    deploy_quintuplet_override: null
+    custom_runtime_config: null
+
+# alveo_u250_firesim_single_rocket_dual_gemmini:
+#     bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-05-24--06-31-07-alveo_u250_firesim_single_rocket_dual_gemmini/cl_xilinx_alveo_u250-firesim-FireSim-FireSimSingleRocketDualGemminiConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+#     deploy_quintuplet_override: null
+#     custom_runtime_config: null
+#### with 29 counters:
+# alveo_u250_firesim_single_rocket_dual_gemmini:
+#     bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-05-28--08-13-50-alveo_u250_firesim_single_rocket_dual_gemmini/cl_xilinx_alveo_u250-firesim-FireSim-FireSimSingleRocketDualGemminiConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+#     deploy_quintuplet_override: null
+#     custom_runtime_config: null
+### with 29 counters and 2 opcodes
+# alveo_u250_firesim_single_rocket_dual_gemmini:
+#     bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-06-06--01-54-53-alveo_u250_firesim_single_rocket_dual_gemmini/cl_xilinx_alveo_u250-firesim-FireSim-FireSimSingleRocketDualGemminiConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+#     deploy_quintuplet_override: null
+#     custom_runtime_config: null
+alveo_u250_firesim_single_rocket_dual_gemmini:
+    bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-08-15--16-25-04-alveo_u250_firesim_single_rocket_dual_gemmini/cl_xilinx_alveo_u250-firesim-FireSim-FireSimSingleRocketDualGemminiConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+    deploy_quintuplet_override: null
+    custom_runtime_config: null
+
+alveo_u250_firesim_rocket_fp16_gemmini:
+    bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-06-07--16-44-19-alveo_u250_firesim_rocket_fp16_gemmini/cl_xilinx_alveo_u250-firesim-FireSim-FireSimFP16GemminiRocketConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+    deploy_quintuplet_override: null
+    custom_runtime_config: null
+
+# alveo_u250_firesim_int8_gemmini_rocket_singlecore_no_nic:
+#     bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-06-12--06-47-58-alveo_u250_firesim_int8_gemmini_rocket_singlecore_no_nic/cl_xilinx_alveo_u250-firesim-FireSim-FireSimGemminiRocketConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
+#     deploy_quintuplet_override: null
+#     custom_runtime_config: null
+alveo_u250_firesim_int8_gemmini_rocket_singlecore_no_nic:
+    bitstream_tar: file:///scratch/prashanth/chipyard/sims/firesim/deploy/results-build/2025-06-15--07-36-11-alveo_u250_firesim_int8_gemmini_rocket_singlecore_no_nic/cl_xilinx_alveo_u250-firesim-FireSim-FireSimGemminiRocketConfig-BaseXilinxAlveoU250Config/firesim.tar.gz
     deploy_quintuplet_override: null
     custom_runtime_config: null

@@ -9,16 +9,26 @@ import org.chipsalliance.cde.config.{Config}
 // DOC include start: GemminiRocketConfig
 class GemminiRocketConfig extends Config(
   new gemmini.DefaultGemminiConfig ++                            // use Gemmini systolic array GEMM accelerator
+  new chipyard.config.WithNPerfCounters(29) ++  
   new freechips.rocketchip.rocket.WithNHugeCores(1) ++
   new chipyard.config.WithSystemBusWidth(128) ++
   new chipyard.config.AbstractConfig)
 // DOC include end: GemminiRocketConfig
 
 class FPGemminiRocketConfig extends Config(
-  new gemmini.GemminiFP32DefaultConfig ++                         // use FP32Gemmini systolic array GEMM accelerator
+  new gemmini.ChipFP32GemminiConfig ++                         // use FP32Gemmini systolic array GEMM accelerator
+  new chipyard.config.WithNPerfCounters(10) ++  
   new freechips.rocketchip.rocket.WithNHugeCores(1) ++
   new chipyard.config.WithSystemBusWidth(128) ++
   new chipyard.config.AbstractConfig)
+
+class FP16GemminiRocketConfig extends Config(
+  new gemmini.GemminiFP16DefaultConfig ++                         // use FP32Gemmini systolic array GEMM accelerator
+  new chipyard.config.WithNPerfCounters(29) ++  
+  new freechips.rocketchip.rocket.WithNHugeCores(1) ++
+  new chipyard.config.WithSystemBusWidth(128) ++
+  new chipyard.config.AbstractConfig)
+
 
 class LeanGemminiRocketConfig extends Config(
   new gemmini.LeanGemminiConfig ++                                 // use Lean Gemmini systolic array GEMM accelerator
@@ -70,4 +80,54 @@ class ReRoCCManyGemminiConfig extends Config(
 class ZstdCompressorRocketConfig extends Config(
   new compressacc.WithZstdCompressor ++
   new freechips.rocketchip.rocket.WithNHugeCores(1) ++
+  new chipyard.config.AbstractConfig)
+
+class QuadRocketFPGemminiConfig extends Config(
+  new gemmini.ChipFP32GemminiConfig ++                         // use FP32Gemmini systolic array GEMM accelerator
+  new freechips.rocketchip.rocket.WithNHugeCores(4) ++
+  new chipyard.config.WithSystemBusWidth(128) ++
+  new chipyard.config.AbstractConfig)
+
+
+class RocketDualGemminiConfig extends Config(
+  new rerocc.WithReRoCC ++
+  new gemmini.ChipFP32GemminiConfig ++   
+  new gemmini.DefaultGemminiConfig ++                      
+  new freechips.rocketchip.rocket.WithNHugeCores(4) ++
+  new chipyard.config.WithSystemBusWidth(128) ++
+  new chipyard.config.AbstractConfig)
+
+
+class SingleRocketDualGemminiConfig extends Config(
+  new rerocc.WithReRoCC ++
+  new gemmini.ChipFP32GemminiConfig ++   
+  new gemmini.DefaultGemminiConfig ++                 
+  new chipyard.config.WithNPerfCounters(10) ++     
+  new freechips.rocketchip.rocket.WithNHugeCores(1) ++
+  new chipyard.config.WithSystemBusWidth(128) ++
+  new chipyard.config.AbstractConfig)
+
+
+class SingleRocketDualGemminiConfig2 extends Config(
+  new gemmini.DualGemminiConfig2 ++   
+  new chipyard.config.WithNPerfCounters(10) ++     
+  new freechips.rocketchip.rocket.WithNHugeCores(1) ++
+  new chipyard.config.WithSystemBusWidth(128) ++
+  new chipyard.config.AbstractConfig)
+  
+
+// class SingleRocketDualGemminiConfig extends Config(
+//   new gemmini.GemminiFP32DefaultConfig ++
+//   new gemmini.DefaultGemminiConfig ++                 
+//   new chipyard.config.WithNPerfCounters(29) ++     
+//   new freechips.rocketchip.rocket.WithNHugeCores(1) ++
+//   new chipyard.config.WithSystemBusWidth(128) ++
+//   new chipyard.config.AbstractConfig)
+
+
+class ReRoCCFPGemminiRocketConfig extends Config(
+  new rerocc.WithReRoCC ++
+  new gemmini.ChipFP32GemminiConfig ++                         // use FP32Gemmini systolic array GEMM accelerator
+  new freechips.rocketchip.rocket.WithNHugeCores(1) ++
+  new chipyard.config.WithSystemBusWidth(128) ++
   new chipyard.config.AbstractConfig)

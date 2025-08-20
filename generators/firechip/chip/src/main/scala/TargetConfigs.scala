@@ -194,6 +194,8 @@ class WithFireSimTestChipConfigTweaks extends Config(
 //*****************************************************************
 // DOC include start: firesimconfig
 class FireSimRocketConfig extends Config(
+  new chipyard.example.WithGraphics() ++
+  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
   new WithDefaultFireSimBridges ++
   new WithFireSimConfigTweaks ++
   new chipyard.RocketConfig)
@@ -269,6 +271,8 @@ class FireSimLargeBoomAndRocketConfig extends Config(
 // Gemmini NN accel config, base off chipyard's GemminiRocketConfig
 //******************************************************************
 class FireSimGemminiRocketConfig extends Config(
+  new chipyard.example.WithGraphics() ++
+  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
   new WithDefaultFireSimBridges ++
   new WithFireSimConfigTweaks ++
   new chipyard.GemminiRocketConfig)
@@ -277,6 +281,28 @@ class FireSimLeanGemminiRocketConfig extends Config(
   new WithDefaultFireSimBridges ++
   new WithFireSimConfigTweaks ++
   new chipyard.LeanGemminiRocketConfig)
+
+class FireSimFPGemminiRocketConfig extends Config(
+  new chipyard.example.WithGraphics() ++
+  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
+  new WithDefaultFireSimBridges ++
+  new WithFireSimConfigTweaks ++
+  new chipyard.FPGemminiRocketConfig)
+
+class FireSimFP16GemminiRocketConfig extends Config(
+  new chipyard.example.WithGraphics() ++
+  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
+  new WithDefaultFireSimBridges ++
+  new WithFireSimConfigTweaks ++
+  new chipyard.FP16GemminiRocketConfig)
+
+class FireSimReROCCFPGemminiRocketConfig extends Config(
+  new chipyard.example.WithGraphics() ++
+  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
+  new WithDefaultFireSimBridges ++
+  new WithFireSimConfigTweaks ++
+  new chipyard.ReRoCCFPGemminiRocketConfig)
+
 
 class FireSimLeanGemminiPrintfRocketConfig extends Config(
   new WithDefaultFireSimBridges ++
@@ -354,3 +380,117 @@ class FireSimLargeBoomSV39CospikeConfig extends Config(
   new WithFireSimConfigTweaks++
   new freechips.rocketchip.rocket.WithSV39 ++
   new chipyard.LargeBoomV3Config)
+
+
+class FireSimShuttleConfig extends Config(
+  new chipyard.example.WithGraphics() ++
+  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
+  new WithDefaultFireSimBridges ++
+  new WithFireSimConfigTweaks ++
+  new chipyard.ShuttleConfig)
+
+
+class FireSimGENV256D128ShuttleConfig extends Config(
+  new chipyard.example.WithGraphics() ++
+  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
+  new WithDefaultFireSimBridges ++
+  new WithFireSimConfigTweaks ++
+  new chipyard.GENV256D128ShuttleConfig) 
+  
+  
+class FireSimGENV256D128RocketConfig extends Config(
+  new chipyard.example.WithGraphics() ++
+  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
+  new WithDefaultFireSimBridges ++
+  new WithFireSimConfigTweaks ++
+  new chipyard.REFV256D128RocketConfig) 
+  
+
+class FireSimSaturnDualGemmini extends Config(
+  new chipyard.example.WithGraphics() ++
+  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
+  new WithDefaultFireSimBridges ++
+  new WithFireSimConfigTweaks ++
+  new chipyard.GENV256D128ShuttleConfigDualGemmini)
+
+class FireSimSaturnGemmini extends Config(
+  new chipyard.example.WithGraphics() ++
+  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
+  new WithDefaultFireSimBridges ++
+  new WithFireSimConfigTweaks ++
+  new chipyard.GENV256D128ShuttleConfigGemmini)
+
+class FireSimSaturnFPGemmini extends Config(
+  new chipyard.example.WithGraphics() ++
+  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
+  new WithDefaultFireSimBridges ++
+  new WithFireSimConfigTweaks ++
+  new chipyard.GENV256D128ShuttleConfigFPGemmini)
+
+class FireSimRocketSaturnFPGemminiConfig extends Config(
+  new chipyard.example.WithGraphics() ++
+  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
+  new WithDefaultFireSimBridges ++
+  new WithFireSimConfigTweaks ++
+  new chipyard.GENV256D128RocketConfigFPGemmini)
+
+
+class FireSimGemminiShuttleConfig extends Config(
+  new chipyard.example.WithGraphics() ++
+  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
+  new WithDefaultFireSimBridges ++
+  new WithFireSimConfigTweaks ++
+  new chipyard.GemminiShuttleConfig)
+
+class FireSimGemminiQuadShuttleConfig extends Config(
+  new chipyard.example.WithGraphics() ++
+  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
+  new WithDefaultFireSimBridges ++
+  new WithFireSimConfigTweaks ++
+  new chipyard.GENV256D128QuadShuttleConfigGemmini)
+
+
+class FireSimSaturnQuadRocketConfig extends Config(
+  new chipyard.example.WithGraphics() ++
+  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
+  new WithDefaultFireSimBridges ++
+  new WithFireSimConfigTweaks ++
+  new chipyard.REFV256D128QuadRocketConfig)
+
+class FireSimSaturnDualRocketConfig extends Config(
+  new chipyard.example.WithGraphics() ++
+  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
+  new WithDefaultFireSimBridges ++
+  new WithFireSimConfigTweaks ++
+  new chipyard.REFV256D128DualRocketConfig)
+
+
+class FireSimQuadRocketFPGemminiConfig extends Config(
+  new chipyard.example.WithGraphics() ++
+  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
+  new WithDefaultFireSimBridges ++
+  new WithFireSimConfigTweaks ++
+  new chipyard.QuadRocketFPGemminiConfig)
+  
+class FireSimRocketDualGemminiConfig extends Config(
+  new chipyard.example.WithGraphics() ++
+  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
+  new WithDefaultFireSimBridges ++
+  new WithFireSimConfigTweaks ++
+  new chipyard.RocketDualGemminiConfig)
+
+
+class FireSimSingleRocketDualGemminiConfig extends Config(
+  new chipyard.example.WithGraphics() ++
+  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
+  new WithDefaultFireSimBridges ++
+  new WithFireSimConfigTweaks ++
+  new chipyard.SingleRocketDualGemminiConfig)
+
+
+class FireSimSingleRocketDualGemminiConfig2 extends Config(
+  new chipyard.example.WithGraphics() ++
+  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
+  new WithDefaultFireSimBridges ++
+  new WithFireSimConfigTweaks ++
+  new chipyard.SingleRocketDualGemminiConfig2)

@@ -14,6 +14,8 @@
 #include <stdlib.h>
 #include <iostream>
 #include <inttypes.h>
+#include <bit>
+#include <cstdint>
 
 #ifndef _WIN32
 #include <unistd.h>
@@ -22,207 +24,160 @@ char graphics_t::KIND;
 
 #endif
 
+
 std::optional<uint32_t> graphics_handler::get() {
+
   /*
-    graphics_handler::get() deals with reading from the socket connection for new stream messages and translating them into a series of 4-byte packets that can be sent over MMIO
-    It takes multiple calls to get() to completely transmit a stream message
+    graphics_handler::get() deals with reading from the ILLIXR host worker socker server and translating them into 4-byte packets that can be sent over MMIO
   */
 
-  // if we don't have the host2driver connection yet, get that before doing anything else
-  if (!client_connected) {
-    if ((client_fd = accept(server_fd, (struct sockaddr*)&client_addr, &client_len)) == -1) {
-      std::cerr << "Accept failed: " << strerror(errno) << std::endl;
-    }
-    std::cout << "[bridge driver] Client connected" << std::endl;
-    client_connected = true;
+  // if we have no current in-flight message, check if host worker server has a new message
+  if (packet_send_count == packet_send_total) {
+
+    ssize_t bytes_received_from_illixr = ::recv(sockfd, txbuffer, BUFFER_SIZE - 1, 0);
+    if (bytes_received_from_illixr > 0) {
+
+      // std::cout << "[bridge driver] message from illixr host with size: " << bytes_received_from_illixr << std::endl;
+      packet_send_total = txbuffer[0]+1;
+      packet_send_count = 1; // not sending the number of packets, that is for the bridge driver to count
+
+      // target should have been paused when reading from bridge so now we unpause it
+      driver->resume_target();
+    } 
+
   }
 
-  // if we are not currently transmitting a previous stream message, we can check if there is a new stream message to send
-  if (stream_packet_send_total == 0) {
-    ssize_t bytes_received_from_host = ::read(client_fd, txbuffer, BUFFER_SIZE - 1);
+  // send an in-flight message
+  if (packet_send_count < packet_send_total) {
+    // std::cout << "[bridge driver] sending: " << txbuffer[packet_send_count] << std::endl;
+    return txbuffer[packet_send_count++];
+  }
   
-    if (bytes_received_from_host > 0) {
 
-      // host2middle sends the connection_id as the first byte
-      char connection_id = txbuffer[0];
-
-      // construct the start-stream packet for the target as {16'b1, connection_id, size}
-      uint32_t start_stream = static_cast<uint32_t>(0xFFFF);
-      uint32_t id           = static_cast<uint32_t>(connection_id) & 0xFF;  
-      uint32_t size         = static_cast<uint32_t>(bytes_received_from_host - 1) & 0xFF;
-
-      start_stream = (start_stream << 16) | (id << 8) | size;
-
-      int index = 0;
-      stream_packets[index++] = start_stream;
-
-      // construct the packets for the stream (break up the bytes into sets of 4-byte messages encoded as uint32_t)
-      for (int i = 0; i < (bytes_received_from_host-1) / 4; i++) {
-        uint32_t b0 = txbuffer[4*i + 0 + 1];
-        uint32_t b1 = txbuffer[4*i + 1 + 1];
-        uint32_t b2 = txbuffer[4*i + 2 + 1];
-        uint32_t b3 = txbuffer[4*i + 3 + 1];
-
-        stream_packets[index++] = (b3 << 24) | (b2 << 16) | (b1 << 8) | (b0);
-      }
-
-      // construct the last packet if total size isn't a multiple of 4
-      if (4*index < bytes_received_from_host - 1) {
-
-        uint32_t last_packet = 0;
-        for (int i = bytes_received_from_host-1; i >= 4*index+1; i--) {
-          uint32_t byte = static_cast<uint32_t>(txbuffer[i]) & 0xFF;  
-          last_packet = (last_packet << 8) | byte;
-        }
-        stream_packets[index++] = last_packet;
-
-      } 
-
-      stream_packet_send_total = index;
-      stream_packet_send_index = 0;
-    }
-  } 
-
-  // if there are packets to transmit from the last stream message
-  if (stream_packet_send_total > 0) {
-    uint32_t return_value = stream_packets[stream_packet_send_index++];
-
-    // if we have sent all the packets, reset the count so that we can listen for another message
-    if (stream_packet_send_index == stream_packet_send_total) {
-      stream_packet_send_total = 0;
-    }
-
-    return return_value;
-  }
-    
   return std::nullopt;
-  
 }
 
 void graphics_handler::put(uint32_t data) {
+
   /*
-    graphics_handler::put() deals with taking 4-byte packets from the bridge, accumulating them into a stream message, and sending the message to the host socket connection
+    graphics_handler::put() reads packets from the bridge and accumulates them into a socket message for the ILLIXR server
   */
   
-  if (stream_packet_receive_total == 0) {
-    // this message should be a start-stream message
 
-    char start1   = (data >> 24) & 0xFF;  
-    char start2   = (data >> 16) & 0xFF;  
-    char conn_id  = (data >> 8) & 0xFF;  
-    char size     = data & 0xFF;          
+  if (packet_receive_total == 0) {
 
-    if (start1 != 0xFF || start2 != 0xFF) {
-      std::cout << "[bridge driver] Error: first packet was not a start-stream packet" << std::endl;
+    if ((data & 0xFF000000) != 0xFF000000) {
+      std::cout << "[bridge driver] Error: first packet was not a gpu-command-start: " << data << std::endl;
       return;
     }
-    stream_packet_receive_total = (int) size + 1;
 
-    rxbuffer[0] = conn_id;
-    stream_packet_receive_count = 1;
+    // this message should be a start message
+    uint8_t start_stream  = (data >> 24) & 0xFF;  
+    uint8_t queue_id      = (data >> 16) & 0xFF;  
+    uint8_t num_packets   = (data >> 8) & 0xFF;
+    uint8_t dma_read      = data & 0xFF;          
+
+    rxbuffer[0] = (uint32_t) queue_id;
+    rxbuffer[1] = (uint32_t) dma_read;
+
+    packet_receive_total = (int) num_packets + 2;
+    packet_receive_count = 2;
+
+    // std::cout << "[bridge driver] start with queue ID: " << rxbuffer[0] << std::endl;
 
   } else {  
-    // we have received a start-stream packet and are now accumulating a stream message for the socket
 
-    for (int i = 0; i < 4; i++) {
-      // get the i-th byte
-      char b = data >> (8*i) && 0xFF;
+    rxbuffer[packet_receive_count++] = data;
+    // std::cout << "[bridge driver] Received packet: " << data << std::endl;
 
-      if (stream_packet_receive_count < stream_packet_receive_total) {
-        rxbuffer[stream_packet_receive_count++] = b;
-      } else {
-        break;
+    // once we get the total message assembled, we can send a socket message to ILLIXR host worker
+    if (packet_receive_count == packet_receive_total) {   
+
+      // std::cout << "[bridge driver] Received total from bridge: " << std::endl;
+      // for (int i = 0; i < packet_receive_total; i++) {
+      //   std::cout << "  " << rxbuffer[i] << std::endl;
+      // }
+
+      int buffer_size = sizeof(uint32_t) * packet_receive_total;
+      uint8_t buffer[buffer_size];
+
+      std::memcpy(buffer, rxbuffer, buffer_size);
+      
+      // send the stream message to the socket
+      if (::send(sockfd, buffer, buffer_size, 0) == -1) {
+        std::cout << "[bridge driver] error sending message to host: " << strerror(errno) << std::endl;
+        perror("send");
       }
-    }
 
-    // once we get the total message assembled, we can write the message to the host2driver connection
-    if (stream_packet_receive_count == stream_packet_receive_total) {   
-      ::write(client_fd, rxbuffer, stream_packet_receive_total);
-      stream_packet_receive_total = 0;
-    }
+      // have driver pause the target simulation in the bridge module
+      driver->pause_target();
 
+      packet_receive_total = 0;
+
+    }
   }
-  
 }
+
+
 
 void graphics_handler::close() {
-  if (client_connected) {
-    ::close(client_fd);
-  }
-  
-  ::close(server_fd);
-  unlink(SOCKET_PATH);
+  ::close(sockfd);
 }
 
-graphics_handler::graphics_handler() {
+
+graphics_handler::graphics_handler(graphics_t* driver) {
 
   /*
-    Set up the socket connection to the host gfxstream host2driver helper
+    Set up the socket connection to the host-gfxstream host2driver helper server
   */
 
-  // open socket server for host2driver helper
-  if ((server_fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
-    std::cerr << "[bridge driver] Socket creation failed: " << strerror(errno) << std::endl;
+  std::cout << "hello there" << std::endl;
+
+  // Create a socket
+  sockfd = socket(AF_UNIX, SOCK_SEQPACKET, 0);
+  if (sockfd == -1) {
+      perror("socket");
+      // std::cout << "[bridge driver] Error creating socket" << std::endl;
+  }
+
+  int flags = fcntl(sockfd, F_GETFL, 0);
+  fcntl(sockfd, F_SETFL, flags | O_NONBLOCK); 
+
+  // Zero out the address structure
+  memset(&addr, 0, sizeof(addr));
+  addr.sun_family = AF_UNIX;
+  strncpy(addr.sun_path, SOCKET_PATH, sizeof(addr.sun_path) - 1);
+
+  // Connect to the server
+  if (connect(sockfd, (struct sockaddr*)&addr, sizeof(addr)) == -1) {
+    perror("connect");
+    ::close(sockfd);
+    std::cout << "[bridge driver] Error connecting to server" << std::endl;
   } else {
-    std::cout << "[bridge driver] Started bridge driver server" << std::endl;
+    std::cout << "[bridge driver] Connected to " << SOCKET_PATH << std::endl;
   }
 
-  // Remove existing socket file
-  unlink(SOCKET_PATH);
+  packet_receive_total = 0;
+  packet_send_total = 0;
+  packet_send_count = 0;
 
-  // Configure server address
-  memset(&server_addr, 0, sizeof(server_addr));
-  server_addr.sun_family = AF_UNIX;
-  strncpy(server_addr.sun_path, SOCKET_PATH, sizeof(server_addr.sun_path) - 1);
-
-  // Bind socket to path
-  if (bind(server_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
-    std::cerr << "[bridge driver] Bind failed: " << strerror(errno) << std::endl;
-    ::close(server_fd);
-  } else {
-    std::cout << "[bridge driver] Bound socket to path" << std::endl;
-  }
-
-  chmod(SOCKET_PATH, 0777);
-
-  // Start listening
-  if (listen(server_fd, 5) == -1) {
-    std::cerr << "Listen failed: " << strerror(errno) << std::endl;
-    ::close(server_fd);
-  }
-
-  std::cout << "[bridge driver] Server listening on " << SOCKET_PATH << std::endl;
-  client_connected = false;
-
-  stream_packet_send_total = 0;
-
+  this->driver = driver;
 
 }
 
-static std::unique_ptr<graphics_handler> create_handler() {
-  return std::make_unique<graphics_handler>();
+static std::unique_ptr<graphics_handler> create_handler(graphics_t* driver) {
+  return std::make_unique<graphics_handler>(driver);
 }
 
 
 graphics_t::graphics_t(simif_t &simif,
-                StreamEngine &stream,
                 const GRAPHICSBRIDGEMODULE_struct &mmio_addrs, 
                 int graphicsno, 
-                const std::vector<std::string> &args,
-                const int stream_to_cpu_idx,
-                const int stream_to_cpu_depth,
-                const int stream_from_cpu_idx,
-                const int stream_from_cpu_depth)
-    : streaming_bridge_driver_t(simif, stream, &KIND), 
+                const std::vector<std::string> &args)
+    : bridge_driver_t(simif, &KIND), 
     mmio_addrs(mmio_addrs), 
-    handler(create_handler()),
-    stream_to_cpu_idx(stream_to_cpu_idx),
-    stream_from_cpu_idx(stream_from_cpu_idx), 
-    stream_to_cpu_depth(stream_to_cpu_depth),
-    stream_from_cpu_depth(stream_from_cpu_depth) 
-    {
-      read_buf = (uint8_t*) malloc(BUFWIDTH * stream_to_cpu_depth);
-      write_buf = (uint8_t*) malloc(BUFWIDTH * stream_from_cpu_depth);
+    handler(create_handler(this)) {
+      target_paused = false;
     }
 
 graphics_t::~graphics_t() = default;
@@ -247,9 +202,10 @@ void graphics_t::recv() {
   }
 }
 
+
 void graphics_t::tick() {
 
-  
+
   data.out.ready = true;                        // we are ready to receive data from outside
   data.in.valid = false;                        // the data we are sending to the bridge is not yet valid
   do {
@@ -264,45 +220,42 @@ void graphics_t::tick() {
     }
 
     if (data.out.fire()) {                      // send the packet from the bridge out to handler
-       handler->put(data.out.bits);
+      handler->put(data.out.bits);
     }
 
     this->send();                               // send the data we wrote into data.in
     data.in.valid = false;                      // mark as invalid after sending
   } while (data.in.fire() || data.out.fire());  
 
+
 }
 
+
+void graphics_t::pause_target() {
+  if (target_paused) {
+    std::cout << "[bridge driver] ERROR: attempting to pause target even though it is already paused" << std::endl;
+    return;
+  } 
+
+  // pulse this register to toggle state in bridge module
+  write(mmio_addrs.host_transmit, 1);
+  target_paused = true;
+}
+
+void graphics_t::resume_target() {
+  if (!target_paused) {
+    std::cout << "[bridge driver] ERROR: attempting to unpause target even though it is already running" << std::endl;
+    return;
+  }
+
+  // pulse this register to toggle state in bridge module
+  write(mmio_addrs.host_transmit, 1);
+  target_paused = false;
+}
 
 void graphics_t::finish() {
   handler->close();
 }
-
-
-
-/*
-
-// read from target memory
-write(mmio_addrs.stream_req_tx_bits, 192);
-write(mmio_addrs.stream_req_tx_valid, 1);
-uint32_t bytes_received_from_fpga = pull(stream_to_cpu_idx, 
-      read_buf, 
-      BUFWIDTH * 3, 
-      BUFWIDTH * 3);
-
-
-// write into target memory
-write(mmio_addrs.stream_req_rx_bits, 128);
-write(mmio_addrs.stream_req_rx_valid, 1);
-
-memset(write_buf, 0xAA, BUFWIDTH);
-memset(write_buf + BUFWIDTH, 0xBB, BUFWIDTH);
-uint32_t bytes_sent_to_fpga = push(stream_from_cpu_idx,
-                          write_buf,
-                          BUFWIDTH *2,
-                          BUFWIDTH *2);
-
-*/
 
 
 
