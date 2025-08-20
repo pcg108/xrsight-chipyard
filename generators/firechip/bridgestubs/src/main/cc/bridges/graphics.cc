@@ -143,10 +143,14 @@ graphics_handler::graphics_handler(graphics_t* driver) {
   int flags = fcntl(sockfd, F_GETFL, 0);
   fcntl(sockfd, F_SETFL, flags | O_NONBLOCK); 
 
+
+  const char* home = getenv("HOME");
+  std::string socket_path = std::string(home) + std::string(SOCKET_PATH);
+
   // Zero out the address structure
   memset(&addr, 0, sizeof(addr));
   addr.sun_family = AF_UNIX;
-  strncpy(addr.sun_path, SOCKET_PATH, sizeof(addr.sun_path) - 1);
+  strncpy(addr.sun_path, socket_path.c_str(), sizeof(addr.sun_path) - 1);
 
   // Connect to the server
   if (connect(sockfd, (struct sockaddr*)&addr, sizeof(addr)) == -1) {
@@ -154,7 +158,7 @@ graphics_handler::graphics_handler(graphics_t* driver) {
     ::close(sockfd);
     std::cout << "[bridge driver] Error connecting to server" << std::endl;
   } else {
-    std::cout << "[bridge driver] Connected to " << SOCKET_PATH << std::endl;
+    std::cout << "[bridge driver] Connected to " << socket_path << std::endl;
   }
 
   packet_receive_total = 0;

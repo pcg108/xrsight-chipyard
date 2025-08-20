@@ -55,7 +55,7 @@ class graphics_handler {
     void close();
 
   private:
-    const char* SOCKET_PATH = "/tmp/illixr-host";
+    const char* SOCKET_PATH = "/illixr-host";
     int sockfd;
     struct sockaddr_un addr;
     int BUFFER_SIZE = 1024;
