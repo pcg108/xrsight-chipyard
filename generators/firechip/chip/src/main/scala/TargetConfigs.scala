@@ -486,11 +486,3 @@ class FireSimSingleRocketDualGemminiConfig extends Config(
   new WithDefaultFireSimBridges ++
   new WithFireSimConfigTweaks ++
   new chipyard.SingleRocketDualGemminiConfig)
-
-
-class FireSimSingleRocketDualGemminiConfig2 extends Config(
-  new chipyard.example.WithGraphics() ++
-  new chipyard.iobinders.WithGraphicsIOPunchthrough ++
-  new WithDefaultFireSimBridges ++
-  new WithFireSimConfigTweaks ++
-  new chipyard.SingleRocketDualGemminiConfig2)
