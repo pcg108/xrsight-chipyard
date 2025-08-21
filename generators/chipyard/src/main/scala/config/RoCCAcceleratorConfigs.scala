@@ -106,14 +106,6 @@ class SingleRocketDualGemminiConfig extends Config(
   new freechips.rocketchip.rocket.WithNHugeCores(1) ++
   new chipyard.config.WithSystemBusWidth(128) ++
   new chipyard.config.AbstractConfig)
-
-
-class SingleRocketDualGemminiConfig2 extends Config(
-  new gemmini.DualGemminiConfig2 ++   
-  new chipyard.config.WithNPerfCounters(10) ++     
-  new freechips.rocketchip.rocket.WithNHugeCores(1) ++
-  new chipyard.config.WithSystemBusWidth(128) ++
-  new chipyard.config.AbstractConfig)
   
 
 // class SingleRocketDualGemminiConfig extends Config(
