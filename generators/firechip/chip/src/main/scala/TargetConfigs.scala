@@ -196,6 +196,7 @@ class WithFireSimTestChipConfigTweaks extends Config(
 class FireSimRocketConfig extends Config(
   new chipyard.example.WithGraphics() ++
   new chipyard.iobinders.WithGraphicsIOPunchthrough ++
+  new chipyard.example.WithTrafficGen() ++
   new WithDefaultFireSimBridges ++
   new WithFireSimConfigTweaks ++
   new chipyard.RocketConfig)

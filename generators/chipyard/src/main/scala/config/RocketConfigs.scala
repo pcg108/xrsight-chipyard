@@ -11,6 +11,7 @@ import freechips.rocketchip.subsystem.{InCluster}
 class RocketConfig extends Config(
   new chipyard.config.WithNPerfCounters(29) ++
   new freechips.rocketchip.rocket.WithNHugeCores(1) ++         // single rocket-core
+  new freechips.rocketchip.subsystem.WithInclusiveCache ++
   new chipyard.config.AbstractConfig)
 
 class DualRocketConfig extends Config(
